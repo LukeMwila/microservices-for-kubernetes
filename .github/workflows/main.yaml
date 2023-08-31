@@ -1,0 +1,39 @@
+name: 'Deploy Orders Helm Chart to EKS'
+on:
+  push:
+    branches:
+      - main
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  EKS_CLUSTER: ${{ secrets.EKS_CLUSTER }}
+  EKS_REGION: ${{ secrets.EKS_REGION }}
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      # Install helm
+      - name: Install Helm
+        run: |
+          curl -sSL https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+          helm version --short
+      # Check AWS version and configure profile
+      - name: Check AWS version
+        run: |
+          aws --version
+          aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+          aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+          aws configure set region $EKS_REGION
+      # Connect to EKS cluster
+      - name: Connect to EKS cluster 
+        run: aws eks --region $EKS_REGION update-kubeconfig --name $EKS_CLUSTER
+      # Build and deploy to EKS cluster
+      - name: Deploy the orders helm chart to EKS
+        run: |
+          cd helm/orders
+          helm template orders . -f values.yaml
+          helm upgrade -i orders . -f values.yaml
+      # Verify deployment
+      - name: Verify deployment
+        run: kubectl rollout status deploy/orders -n ecommerce
