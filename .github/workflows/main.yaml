@@ -28,6 +28,12 @@ jobs:
       # Connect to EKS cluster
       - name: Connect to EKS cluster 
         run: aws eks --region $EKS_REGION update-kubeconfig --name $EKS_CLUSTER
+      # Checkout helm directory
+      - name: Checkout helm directory
+        uses: actions/checkout@v3
+        with:
+          sparse-checkout: |
+            helm
       # Build and deploy to EKS cluster
       - name: Deploy the orders helm chart to EKS
         run: |
