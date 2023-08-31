@@ -37,7 +37,9 @@ jobs:
       # Build and deploy to EKS cluster
       - name: Deploy the orders helm chart to EKS
         run: |
-          ls
+          cd helm/orders
+          helm template orders . -f values.yaml
+          helm upgrade -i orders -f values.yaml
       # Verify deployment
-      #- name: Verify deployment
-      #  run: kubectl rollout status deploy/orders -n ecommerce
+      - name: Verify deployment
+        run: kubectl rollout status deploy/orders -n ecommerce
