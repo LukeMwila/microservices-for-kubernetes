@@ -1,0 +1,1 @@
+You can access your application from the following URL: http://k8s-ecommerc-albingre-130b6e04f4-1810486516.af-south-1.elb.amazonaws.com/v1/products

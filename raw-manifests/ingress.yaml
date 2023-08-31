@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress 
+metadata: 
+  name: alb-ingress
+  namespace: ecommerce
+  annotations: 
+    kubernetes.io/ingress.class: alb  
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+spec:
+  rules:
+  - http:
+      paths:      
+      - backend:
+          service:
+            name: orders-service
+            port: 
+              number: 3003
+        path: /v1/orders
+        pathType: Prefix
+      - backend:
+          service:
+            name: products-service
+            port: 
+              number: 3004
+        path: /v1/products
+        pathType: Prefix

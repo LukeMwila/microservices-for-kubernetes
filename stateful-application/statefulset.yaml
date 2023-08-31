@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mongo
+  namespace: ecommerce
+spec:
+  serviceName: mongo-db-service
+  selector:
+    matchLabels:
+      role: mongo-db
+      app: mongo-db
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        role: mongo-db
+        app: mongo-db
+    spec:
+      containers:
+      - name: mongo-db
+        image: mongo:4.4.24
+        ports:
+          - containerPort: 27017
+        volumeMounts:
+          - name: mongo-persistent-storage
+            mountPath: /data/db
+  volumeClaimTemplates:
+    - metadata:
+        name: mongo-persistent-storage
+      spec:
+        storageClassName: "gp2"
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 2Gi

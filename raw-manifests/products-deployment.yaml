@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: products
+  namespace: ecommerce
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: products
+      workload: ecommerce
+  template:
+    metadata:
+      labels:
+        app: products
+        workload: ecommerce
+    spec:
+      containers:
+        - name: products-container
+          image: "public.ecr.aws/k3d0y0m9/ecommerce/products:0.0.1"
+          ports:
+          - containerPort: 3004
+          resources:
+            requests:
+              cpu: "1"
+              memory: "64Mi"

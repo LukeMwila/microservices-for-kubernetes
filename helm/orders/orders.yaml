@@ -1,0 +1,75 @@
+---
+# Source: orders/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: orders-service
+  labels:
+    helm.sh/chart: orders-0.1.0
+    app.kubernetes.io/name: orders
+    app.kubernetes.io/instance: orders
+    app.kubernetes.io/version: "0.0.1"
+    app.kubernetes.io/managed-by: Helm
+  namespace: ecommerce
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3003
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: orders
+    app.kubernetes.io/instance: orders
+---
+# Source: orders/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: orders
+  labels:
+    helm.sh/chart: orders-0.1.0
+    app.kubernetes.io/name: orders
+    app.kubernetes.io/instance: orders
+    app.kubernetes.io/version: "0.0.1"
+    app.kubernetes.io/managed-by: Helm
+  namespace: ecommerce
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: orders
+      app.kubernetes.io/instance: orders
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: orders
+        app.kubernetes.io/instance: orders
+    spec:
+      serviceAccountName: default
+      securityContext:
+        {}
+      containers:
+        - name: orders
+          securityContext:
+            {}
+          image: "public.ecr.aws/k3d0y0m9/ecommerce/orders:0.0.1"
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 3003
+              protocol: TCP
+          livenessProbe:
+            tcpSocket:
+              port: 3003
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            tcpSocket:
+              port: 3003
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            requests:
+              cpu: 1
+              memory: 64Mi
