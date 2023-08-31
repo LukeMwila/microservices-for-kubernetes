@@ -39,7 +39,7 @@ jobs:
         run: |
           cd helm/orders
           helm template orders . -f values.yaml
-          helm upgrade -i orders -f values.yaml
+          helm upgrade -i orders . -f values.yaml
       # Verify deployment
       - name: Verify deployment
         run: kubectl rollout status deploy/orders -n ecommerce
