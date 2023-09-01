@@ -34,7 +34,7 @@ jobs:
         with:
           sparse-checkout: |
             helm
-      # Build and deploy to EKS cluster
+      # Deploy to EKS cluster
       - name: Deploy the orders helm chart to EKS
         run: |
           cd helm/orders
