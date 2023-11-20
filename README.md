@@ -33,11 +33,11 @@ GET Products - /v1/products
 
 #### Orders 
 Repository: public.ecr.aws/k3d0y0m9/ecommerce/orders
-Image tag: "0.0.1"
+<br />Image tag: "0.0.1"
 
 #### Products
 Repository: public.ecr.aws/k3d0y0m9/ecommerce/products
-Image tag: "0.0.1"
+<br />Image tag: "0.0.1"
 
 ## Raw Manifests
 
